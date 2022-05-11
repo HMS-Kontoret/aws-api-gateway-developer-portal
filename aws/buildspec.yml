@@ -17,10 +17,9 @@ phases:
 
       - DEPLOYER_CONFIG=aws/deployer.config.js
 
-      - node run release
+      - node run build
+      - node run deploy
 
-  post_build:
-    commands:
       - |
         if [[ "${CLOUDFRONT_DISTRIBUTION_ID}x" != "x" ]]; then
           echo Invalidating CloudFront distribution $CLOUDFRONT_DISTRIBUTION_ID
