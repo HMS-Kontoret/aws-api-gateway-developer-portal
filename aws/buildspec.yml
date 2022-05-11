@@ -4,7 +4,7 @@ phases:
 
   install:
     commands:
-      - n 16 # Build using Node v16 (LTS)
+      #- n 16 # Build using Node v16 (LTS)
       - aws --version
       - node --version
       - npm --version
