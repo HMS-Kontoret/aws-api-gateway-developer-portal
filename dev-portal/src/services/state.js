@@ -122,6 +122,12 @@ reactTo(
 function fetchApiImage (apiList) {
   apiList.forEach(api => {
     if (!api.logo) {
+      // We do NOT support custom API logos, fetching API images is not necessary for us,
+      // and it only causes errors in browser log when fetch fails ...
+      api.logo = '/custom-content/api-logos/default.png'
+      return
+
+      // eslint-disable-next-line no-unreachable
       const key = api.apiStage == null ? api.id : `${api.apiId}_${api.apiStage}`
       const specificLogo = `/custom-content/api-logos/${key}.png`
 

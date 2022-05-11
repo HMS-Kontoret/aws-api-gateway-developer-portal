@@ -7,7 +7,7 @@ import { Menu, Image } from 'semantic-ui-react'
 import {
   isAdmin,
   isAuthenticated,
-  isRegistered,
+  // isRegistered,
   logout,
   getLoginRedirectUrl
 } from 'services/self'
@@ -45,7 +45,7 @@ export const NavBar = observer(
         <Menu.Menu position='right'>
           {isAuthenticated() ? <>
             {isAdmin() && <MenuLink to='/admin/apis'>Admin Panel</MenuLink>}
-            {isRegistered() && <MenuLink to='/dashboard'>My Dashboard</MenuLink>}
+            {/* {isRegistered() && <MenuLink to='/dashboard'>My Dashboard</MenuLink>} */}
             <MenuLink onClick={logout}>
               <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center' }}>
                 {email && <span style={{ marginBottom: '.5rem' }}>

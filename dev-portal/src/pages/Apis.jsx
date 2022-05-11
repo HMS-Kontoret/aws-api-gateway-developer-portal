@@ -51,6 +51,7 @@ export default observer(class ApisPage extends React.Component {
             plugins: [SwaggerLayoutPlugin],
             supportedSubmitMethods: [],
             spec: api.swagger,
+            docExpansion: 'none',
             onComplete: () => cell.preauthorizeApiKey()
           }
           if (isRegistered()) {

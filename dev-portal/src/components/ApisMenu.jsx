@@ -17,11 +17,26 @@ import Sidebar from 'components/Sidebar/Sidebar'
 import SidebarHeader from 'components/Sidebar/SidebarHeader'
 import MenuLink from 'components/MenuLink'
 
+const stageOrder = ['prod', 'test', 'dev', 'proto']
+
+function isKnownStage (stage) {
+  return stageOrder.includes(stage)
+}
+
+function getTitleWithoutStage (title, stage) {
+  if (title.endsWith('-' + stage)) {
+    // Return the title without the stage suffix
+    return title.substring(0, title.lastIndexOf('-'))
+  }
+  return title
+}
+
+// noinspection JSUnusedLocalSymbols
 function getApisWithStages (selectedApiId, selectedStage, activateFirst) {
   const apiList = [].concat(_.get(store, 'apiList.generic', []), _.get(store, 'apiList.apiGateway', [])).map(api => ({
-    group: api.apiId || api.id,
+    group: api.apiStage || api.id,
     id: api.apiStage || api.id,
-    title: api.swagger.info.title,
+    title: getTitleWithoutStage(api.swagger.info.title, api.apiStage),
     route: `/apis/${api.id}` + (api.apiStage ? '/' + api.apiStage : ''),
     active: (
       (selectedApiId && (api.id === selectedApiId || api.apiId === selectedApiId)) &&
@@ -29,6 +44,25 @@ function getApisWithStages (selectedApiId, selectedStage, activateFirst) {
     ),
     stage: api.apiStage
   }))
+
+  const sortByStageOrder = stageOrder.reduce((obj, item, index) => {
+    return {
+      ...obj,
+      [item]: index
+    }
+  }, {})
+
+  // Sort the APIs by stage and title (stages have predetermined order: 'prod', 'test', 'dev' and 'proto')
+  apiList.sort((first, second) => {
+    if (first.stage !== second.stage) {
+      if (isKnownStage(first.stage) && isKnownStage(second.stage)) {
+        return sortByStageOrder[first.stage] - sortByStageOrder[second.stage]
+      }
+      return first.stage.localeCompare(second.stage)
+    } else {
+      return first.title.localeCompare(second.title)
+    }
+  })
 
   return _.toPairs(_.groupBy(apiList, 'group'))
     .map(([group, apis]) => ({ group, apis, active: _.some(apis, 'active'), title: apis[0].title }))
@@ -71,14 +105,14 @@ export default observer(function ApisMenu (props) {
       <SidebarHeader>APIs</SidebarHeader>
 
       <>
-        {apiGroupList.map(({ apis, title, group, active }) => (
+        {apiGroupList.map(({ apis, group, active }) => (
           <MenuLink key={group} active={active} to={apis[0].stage ? null : apis[0].route}>
-            {title}
+            {group}
             {apis[0].stage ? (
               <Menu.Menu>
-                {apis.map(({ route, stage, active, id }) => (
+                {apis.map(({ route, title, active, id }) => (
                   <MenuLink key={id} to={route} active={active} style={{ fontWeight: '400' }}>
-                    {stage}
+                    {title}
                   </MenuLink>
                 ))}
               </Menu.Menu>

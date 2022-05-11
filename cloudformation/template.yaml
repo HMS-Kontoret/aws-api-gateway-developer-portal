@@ -1324,7 +1324,8 @@ Resources:
       FunctionName: !Sub '${AWS::StackName}-CognitoPostAuthenticationTriggerFn'
       CodeUri: ../lambdas/cognito-post-authentication-trigger
       Handler: index.handler
-      MemorySize: 128
+      # Increased from default 128 to 160 based on recommendations from AWS Trusted Advisor:
+      MemorySize: 160
       Role: !GetAtt CognitoPostAuthenticationTriggerExecutionRole.Arn
       Runtime: nodejs12.x
       Timeout: 3
@@ -1708,7 +1709,8 @@ Resources:
     Properties:
       CodeUri: ../lambdas/catalog-updater
       Handler: index.handler
-      MemorySize: 128
+      # Need 512 here to accomodate for Increased from default 128 to 160 based on recommendations from AWS Trusted Advisor:
+      MemorySize: 512
       Role: !GetAtt CatalogUpdaterLambdaExecutionRole.Arn
       Runtime: nodejs12.x
       Timeout: 20

@@ -1,0 +1,40 @@
+version: 0.2
+
+phases:
+
+  install:
+    commands:
+      - n 16 # Build using Node v16 (LTS)
+      - aws --version
+      - node --version
+      - npm --version
+
+      - node run install
+
+  build:
+    on-failure: ABORT
+    commands:
+
+      - DEPLOYER_CONFIG=aws/deployer.config.js
+
+      - node run release
+
+  post_build:
+    commands:
+      - |
+        if [[ "${CLOUDFRONT_DISTRIBUTION_ID}x" != "x" ]]; then
+          echo Invalidating CloudFront distribution $CLOUDFRONT_DISTRIBUTION_ID
+          INVALIDATION_ID=$(aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths "/*" | jq -r .Invalidation.Id)
+          echo Waiting max 10 minutes for invalidation id $INVALIDATION_ID to complete
+          aws cloudfront wait invalidation-completed --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --id $INVALIDATION_ID
+        fi
+
+
+# Cache npm cache and packages to avoid downloading ALL packages on every build
+# Note: requires 'Custom Cache' to be enabled in CodeBuild 'Edit Artifacts' section, 'Additional configuration' for the Local cache type!
+cache:
+  paths:
+    - '/root/.npm/**/*'
+    - 'node_modules/**/*'
+    - 'dev-portal/node_modules/**/*'
+    - 'lambdas/**/node_modules/**/*'

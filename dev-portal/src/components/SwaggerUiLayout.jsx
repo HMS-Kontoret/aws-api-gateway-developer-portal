@@ -68,13 +68,13 @@ function InfoReplacement ({ specSelectors }) {
           <Header as='h1'>{apiTitle}</Header>
           <div style={{ display: 'flex', paddingBottom: '1em' }}>
             <div style={{ marginRight: '20px' }}>
-              {store.api.apiStage == null ? <p style={{ fontWeight: 'bold' }}>Version</p> : null}
+              {version ? <p style={{ fontWeight: 'bold' }}>Version</p> : null}
               {endpoint ? <p style={{ fontWeight: 'bold' }}>Endpoint</p> : null}
               {apiDescription ? <p style={{ fontWeight: 'bold' }}>Description</p> : null}
               {/* <p style={{ fontWeight: "bold" }}>Usage Plan</p> */}
             </div>
             <div>
-              {store.api.apiStage == null ? <p>{version}</p> : null}
+              {version ? <p>{version}</p> : null}
               {endpoint ? <p>{endpoint}</p> : null}
               {apiDescription ? <p>{apiDescription}</p> : null}
               {/* <p>{store.api.usagePlan.name}</p> */}
@@ -113,7 +113,8 @@ const SubscriptionButtons = observer(class SubscriptionButtons extends React.Com
         )
       )
     } else {
-      return <Header style={{ marginTop: '0em' }} as='h4' color='grey'>This version of the API is not configured to be subscribable from the portal. Please contact an admin for more details.</Header>
+      return null
+      // return <Header style={{ marginTop: '0em' }} as='h4' color='grey'>This version of the API is not configured to be subscribable from the portal. Please contact an admin for more details.</Header>
     }
   }
 })
