@@ -23,8 +23,28 @@ function isKnownStage (stage) {
   return stageOrder.includes(stage)
 }
 
-function getTitleWithoutStage (title, stage) {
-  if (title.endsWith('-' + stage)) {
+function titleContainsStage (title) {
+  const stagePart = title.substring(title.lastIndexOf('-') + 1)
+  return isKnownStage(stagePart)
+}
+
+function getStageFromTitle (title) {
+  if (titleContainsStage(title)) {
+    return title.substring(title.lastIndexOf('-') + 1)
+  }
+}
+
+function getStageFromTitleOrApi (api) {
+  if (api.apiStage) {
+    return api.apiStage
+  } else if (titleContainsStage(api.swagger.info.title)) {
+    return getStageFromTitle(api.swagger.info.title)
+  }
+}
+
+function getTitleWithoutStage (api) {
+  const title = api.swagger.info.title
+  if (titleContainsStage(title)) {
     // Return the title without the stage suffix
     return title.substring(0, title.lastIndexOf('-'))
   }
@@ -34,15 +54,15 @@ function getTitleWithoutStage (title, stage) {
 // noinspection JSUnusedLocalSymbols
 function getApisWithStages (selectedApiId, selectedStage, activateFirst) {
   const apiList = [].concat(_.get(store, 'apiList.generic', []), _.get(store, 'apiList.apiGateway', [])).map(api => ({
-    group: api.apiStage || api.id,
+    group: getStageFromTitleOrApi(api) || api.id,
     id: api.apiStage || api.id,
-    title: getTitleWithoutStage(api.swagger.info.title, api.apiStage),
+    title: getTitleWithoutStage(api),
     route: `/apis/${api.id}` + (api.apiStage ? '/' + api.apiStage : ''),
     active: (
       (selectedApiId && (api.id === selectedApiId || api.apiId === selectedApiId)) &&
-      (!selectedStage || api.apiStage === selectedStage)
+      (!selectedStage || getStageFromTitleOrApi(api) === selectedStage)
     ),
-    stage: api.apiStage
+    stage: getStageFromTitleOrApi(api)
   }))
 
   const sortByStageOrder = stageOrder.reduce((obj, item, index) => {
@@ -54,7 +74,7 @@ function getApisWithStages (selectedApiId, selectedStage, activateFirst) {
 
   // Sort the APIs by stage and title (stages have predetermined order: 'prod', 'test', 'dev' and 'proto')
   apiList.sort((first, second) => {
-    if (first.stage !== second.stage) {
+    if ((first.stage && second.stage) && (first.stage !== second.stage)) {
       if (isKnownStage(first.stage) && isKnownStage(second.stage)) {
         return sortByStageOrder[first.stage] - sortByStageOrder[second.stage]
       }

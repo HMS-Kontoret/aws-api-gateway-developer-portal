@@ -39,11 +39,13 @@ function Markdown ({ source }) {
 // *not* make this a component, and do *not* use hooks or anything similar in it.
 function InfoReplacement ({ specSelectors }) {
   let endpoint
-  if (specSelectors.hasHost()) {
+  const servers = specSelectors.servers()
+  if (servers && servers.size) {
+    endpoint = servers.getIn([0, 'url'])
+  } else if (specSelectors.hasHost()) {
     endpoint = `https://${specSelectors.host()}${specSelectors.basePath() || ''}`
   } else {
-    const servers = specSelectors.servers()
-    if (servers && servers.size) endpoint = servers.getIn([0, 'url'])
+    endpoint = 'unknown'
   }
 
   const info = specSelectors.info()
