@@ -25,9 +25,10 @@ exports.handler = async (event, context) => {
           AllowedOAuthScopes: event.ResourceProperties.AllowedOAuthScopes,
 
           // AVONOVA adaptation BEGIN
-          // Set token validity up to 12 hours (from default 1 hour)
-          AccessTokenValidity: 12,
-          IdTokenValidity: 12
+          RefreshTokenValidity: event.ResourceProperties.RefreshTokenValidity,
+          AccessTokenValidity: event.ResourceProperties.AccessTokenValidity,
+          IdTokenValidity: event.ResourceProperties.IdTokenValidity,
+          TokenValidityUnits: event.ResourceProperties.TokenValidityUnits
           // AVONOVA adaptation END
         }).promise()
 

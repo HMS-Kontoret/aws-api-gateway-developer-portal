@@ -1419,11 +1419,6 @@ Resources:
       ClientName: CognitoIdentityPool
       GenerateSecret: false
       RefreshTokenValidity: 30
-      # AVONOVA adaptation BEGIN
-      # Increase login token validity from default 1 hour to 12 hours
-      AccessTokenValidity: 12
-      IdTokenValidity: 12
-      # AVONOVA adaptation END
       PreventUserExistenceErrors: ENABLED
 
   CognitoUserPoolClientSettingsBackingFnRole:
@@ -1501,6 +1496,17 @@ Resources:
       AllowedOAuthFlowsUserPoolClient: true
       AllowedOAuthFlows: [ "implicit" ]
       AllowedOAuthScopes: [ "openid" ]
+      # AVONOVA adaptation BEGIN
+      RefreshTokenValidity: 30
+      # Increase login token validity from default 1 hour to 12 hours
+      AccessTokenValidity: 12
+      IdTokenValidity: 12
+      TokenValidityUnits: {
+        RefreshToken: 'days',
+        AccessToken: 'hours'
+        IdToken: 'hours',
+      }
+      # AVONOVA adaptation END
 
   CognitoUserPoolDomainBackingFnRole:
     Type: 'AWS::IAM::Role'
