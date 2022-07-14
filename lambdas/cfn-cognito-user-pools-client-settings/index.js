@@ -22,7 +22,13 @@ exports.handler = async (event, context) => {
             : [event.ResourceProperties.LogoutURL],
           AllowedOAuthFlowsUserPoolClient: (event.ResourceProperties.AllowedOAuthFlowsUserPoolClient === 'true'),
           AllowedOAuthFlows: event.ResourceProperties.AllowedOAuthFlows,
-          AllowedOAuthScopes: event.ResourceProperties.AllowedOAuthScopes
+          AllowedOAuthScopes: event.ResourceProperties.AllowedOAuthScopes,
+
+          // AVONOVA adaptation BEGIN
+          // Set token validity up to 12 hours (from default 1 hour)
+          AccessTokenValidity: 12,
+          IdTokenValidity: 12
+          // AVONOVA adaptation END
         }).promise()
 
         break

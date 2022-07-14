@@ -27,7 +27,9 @@ We have modified the original source code for some of our needs. The changes are
   * Show API version for APIs that has a stage (all of our APIs).
   * Remove 'API not subscribable' message (our APIs can not be subscribed to).
 * Removed 'Dashboard' menu from top nav bar (we do not use it since our APIs do not have a usage plan)
-* Increased memory for catalog-updated Lambda to avoid error that occurs with APIs that have more than a few methods (see this [issue](https://github.com/awslabs/aws-api-gateway-developer-portal/issues/489)) - this interim fix can be removed once the PR for this issue has been merged in the original project. 
+* Increased memory for catalog-updated Lambda to avoid error that occurs with APIs that have more than a few methods (see this [issue](https://github.com/awslabs/aws-api-gateway-developer-portal/issues/489)) - this interim fix can be removed once the PR for this issue has been merged in the original project.
+* Upped access- and ID-token validity to 12 hours (from default 1 hour) in AWS Cognito user pool
+  * [index.js](lambdas/cfn-cognito-user-pools-client-settings/index.js)
 
 
 ## Continuous Deployment
