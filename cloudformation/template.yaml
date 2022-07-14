@@ -1419,6 +1419,11 @@ Resources:
       ClientName: CognitoIdentityPool
       GenerateSecret: false
       RefreshTokenValidity: 30
+      # AVONOVA adaptation BEGIN
+      # Increase login token validity from default 1 hour to 12 hours
+      AccessTokenValidity: 12
+      IdTokenValidity: 12
+      # AVONOVA adaptation END
       PreventUserExistenceErrors: ENABLED
 
   CognitoUserPoolClientSettingsBackingFnRole:

@@ -30,6 +30,7 @@ We have modified the original source code for some of our needs. The changes are
 * Increased memory for catalog-updated Lambda to avoid error that occurs with APIs that have more than a few methods (see this [issue](https://github.com/awslabs/aws-api-gateway-developer-portal/issues/489)) - this interim fix can be removed once the PR for this issue has been merged in the original project.
 * Upped access- and ID-token validity to 12 hours (from default 1 hour) in AWS Cognito user pool
   * [index.js](lambdas/cfn-cognito-user-pools-client-settings/index.js)
+  * [template.yml](cloudformation/template.yaml)
 
 
 ## Continuous Deployment
