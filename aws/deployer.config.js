@@ -39,7 +39,7 @@ module.exports = {
   accountRegistrationMode: 'invite',
   staticAssetRebuildMode: 'overwrite-content',
 
-  edgeLambdaRebuildToken: 'defaultRebuildToken7'
+  edgeLambdaRebuildToken: 'defaultRebuildToken8'
 
   // Toggle this any time the edge lambda or its replicator lambda need updated. You will be told in
   // the migration instructions to do so if you need to.
